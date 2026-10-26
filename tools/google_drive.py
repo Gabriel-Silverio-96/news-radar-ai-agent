@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from dotenv import load_dotenv
+
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -15,8 +17,9 @@ from googleapiclient.errors import HttpError
 
 SCOPES = ["https://www.googleapis.com/auth/drive.file"]
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(PROJECT_ROOT / ".env")
 MAX_REPORT_LENGTH = 30_000
-REPORTS_FOLDER_ID = "1ws4QxogqmwfljJHBAOVTeg5INe1gAD-Y"
+REPORTS_FOLDER_ID = os.getenv("GOOGLE_DRIVE_REPORTS_FOLDER_ID", "").strip()
 REPORT_TIMEZONE = ZoneInfo("America/Sao_Paulo")
 
 
@@ -62,6 +65,12 @@ def save_news_report(report_text: str) -> dict[str, Any]:
     Returns:
         The created document ID and URL, or a structured error.
     """
+    if not REPORTS_FOLDER_ID:
+        return {
+            "status": "error",
+            "message": "GOOGLE_DRIVE_REPORTS_FOLDER_ID is not configured in .env.",
+        }
+
     report_text = report_text.strip()
     if not report_text:
         return {"status": "error", "message": "report_text cannot be empty."}
