@@ -16,7 +16,11 @@ if [[ ! -x "$ADK_BIN" ]]; then
   exit 1
 fi
 
-if "$ADK_BIN" run "$AGENT_DIR" "$REQUEST"; then
+REPLAY_FILE="$(mktemp "${TMPDIR:-/tmp}/news-radar-request.XXXXXX")"
+trap 'rm -f "$REPLAY_FILE"' EXIT
+"$PROJECT_DIR/.venv/bin/python" -c 'import json, sys; json.dump({"state": {}, "queries": [sys.argv[2]]}, open(sys.argv[1], "w", encoding="utf-8"))' "$REPLAY_FILE" "$REQUEST"
+
+if "$ADK_BIN" run --replay "$REPLAY_FILE" "$AGENT_DIR"; then
     print "
 █▀▀ █ █▄░█ █ █▀ █░█
 █▀░ █ █░▀█ █ ▄█ █▀█"
