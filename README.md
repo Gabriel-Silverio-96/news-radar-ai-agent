@@ -1,4 +1,10 @@
-# News Radar AI Agent
+<p align="center">
+<img alt="Background news radar ai agent" src="https://github.com/user-attachments/assets/66b0bbc2-94c0-47a2-989b-6c78def51ebf"/>
+</p>
+
+<h1 align="center">
+ News Radar AI Agent
+</h1>
 
 News Radar is an AI agent that follows international news and turns what it finds into a clear briefing. It uses Gemini to understand the stories, checks headlines and can save the finished report as a new Google Doc.
 
