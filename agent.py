@@ -1,10 +1,22 @@
 """News Radar AI agent definition."""
 
+import atexit
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).resolve().parent / ".env")
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+load_dotenv(PROJECT_ROOT / ".env")
+
+from langfuse import get_client
+from openinference.instrumentation.google_adk import GoogleADKInstrumentor
+
+langfuse = get_client()
+GoogleADKInstrumentor().instrument()
+atexit.register(langfuse.flush)
 
 from google.adk.agents import Agent
 
