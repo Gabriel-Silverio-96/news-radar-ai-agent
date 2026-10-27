@@ -12,7 +12,7 @@ The agent can read selected articles for extra context and remember which headli
 
 ## Requirements
 
-- Python 3 and a working `pip` installation.
+- Python 3.12 and a working `pip` installation.
 - A Gemini API key for a Google project that is allowed to use the Gemini API.
 - A Google OAuth Desktop application client for Google Drive and Google Docs access.
 
@@ -21,7 +21,7 @@ The agent can read selected articles for extra context and remember which headli
 From the project root, create and activate a virtual environment, then install the dependencies:
 
 ```bash
-python3 -m venv .venv
+python3.12 -m venv .venv
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
@@ -35,7 +35,20 @@ Create a `.env` file in the project root. Do not commit it:
 GOOGLE_GENAI_USE_ENTERPRISE=FALSE
 GOOGLE_API_KEY=YOUR_GEMINI_API_KEY
 GOOGLE_DRIVE_REPORTS_FOLDER_ID=YOUR_DRIVE_FOLDER_ID
+LANGFUSE_PUBLIC_KEY=YOUR_LANGFUSE_PUBLIC_KEY
+LANGFUSE_SECRET_KEY=YOUR_LANGFUSE_SECRET_KEY
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+LANGFUSE_TRACING_ENVIRONMENT=development
 ```
+
+### Langfuse Observability
+
+The agent uses Langfuse to record traces of Google ADK runs. Traces help you inspect model calls, tool calls, timing, and errors.
+
+1. Create a Langfuse project and copy its Public Key and Secret Key from the project's API keys settings.
+2. Add the Langfuse variables in the `.env` example above. Set `LANGFUSE_BASE_URL` to the URL for your Langfuse region or self-hosted instance.
+3. Run the agent with `./run.sh`.
+4. Open the project in Langfuse and select **Traces** to review the agent run and its steps.
 
 ### Google Drive OAuth
 
